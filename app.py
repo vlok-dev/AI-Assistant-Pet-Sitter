@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 import os
 import time
+from pathlib import Path
 
 st.set_page_config(page_title="🐾 Instructions For Birdies", page_icon="🐾")
 
@@ -34,51 +35,34 @@ FREE_MODELS = [
 ]
 
 # ------------------------------------------------------------------
-# EDIT YOUR PET INSTRUCTIONS BELOW
+# LOAD INSTRUCTIONS FROM trip-instructions.txt
+# (the file must sit in the same folder as app.py)
 # ------------------------------------------------------------------
-PET_INSTRUCTIONS = """
-You are a helpful assistant for a pet sitter staying in the owner's home.
-Answer using ONLY the information below. If the answer is not here, say you 
-don't know and suggest contacting the owner.
+INSTRUCTIONS_FILE = Path(__file__).parent / "trip-instructions.txt"
 
---- PETS ---
-Max: Dog, 5 years, Labrador mix. Friendly, food-motivated, pulls on leash.
-Bella: Cat, 3 years. Shy at first, hides under the bed.
+try:
+    instructions_text = INSTRUCTIONS_FILE.read_text(encoding="utf-8")
+except FileNotFoundError:
+    st.error(f"Could not find {INSTRUCTIONS_FILE.name}. Make sure it is in the same folder as app.py.")
+    st.stop()
 
---- FEEDING ---
-Max: 1.5 cups dry kibble at 8:00 AM and 6:00 PM. Refill water bowl twice daily.
-Bella: 1/2 cup wet food at 8:00 AM and 8:00 PM. Dry food available all day.
-Treats: Max gets 2 small treats after walks. No table scraps.
+SYSTEM_PROMPT = f"""
+You are a helpful assistant for a pet sitter looking after the owners' 2 budgies
+("the babies") while the owners are away.
+Answer using ONLY the instructions below. If the answer is not there, say you
+don't know and suggest contacting the owners. Keep answers clear and practical,
+and always stress anything marked as very important (e.g. no soap residue,
+washing the pestle, keeping the cage closed).
 
---- WALKING / PLAY ---
-Max: Two walks daily (7:00 AM and 5:30 PM), 20–30 minutes. Use blue leash.
-Bella: Feather wand play around 9:00 PM.
-
---- MEDICATIONS ---
-Max: One joint supplement chew with dinner.
-Bella: None.
-
---- HOUSE RULES ---
-- Do not let Bella outside.
-- Max is allowed on the couch but not on the bed.
-- Take out trash on Tuesday and Friday nights.
-- Wi-Fi: HomeWiFi_5G, password: PetSitter2026!
-
---- EMERGENCY CONTACTS ---
-Owner: +1 (555) 123-4567
-Backup: Mrs. Chen, +1 (555) 987-6543 (spare key under front flower pot)
-Vet: Happy Paws Clinic, +1 (555) 222-3344, 123 Main St.
-Emergency vet: City Animal ER, +1 (555) 333-9999 (open 24 hrs)
-
---- OTHER ---
-Collect mail daily and stack on hallway table. Water the living-room fern every 3 days.
+--- INSTRUCTIONS ---
+{instructions_text}
 """
 
 # ------------------------------------------------------------------
 # SESSION STATE
 # ------------------------------------------------------------------
 if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "system", "content": PET_INSTRUCTIONS}]
+    st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
 if "model_idx" not in st.session_state:
     st.session_state.model_idx = 0
 
@@ -94,7 +78,7 @@ for msg in st.session_state.messages:
 # ------------------------------------------------------------------
 # CHAT INPUT
 # ------------------------------------------------------------------
-if prompt := st.chat_input("e.g., When does Max eat? Where is the vet?"):
+if prompt := st.chat_input("e.g., How do I clean the food bowls? What do I do when it's cold?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
