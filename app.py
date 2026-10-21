@@ -78,7 +78,10 @@ for msg in st.session_state.messages:
 # ------------------------------------------------------------------
 # CHAT INPUT
 # ------------------------------------------------------------------
-if prompt := st.chat_input("e.g., How do I clean the food bowls? What do I do when it's cold?"):
+st.divider()
+st.markdown("### 💬 Ask a Question About the Birdies")
+st.caption("Type your question in the box below and press Enter to send it.")
+if prompt := st.chat_input("Type your question here (e.g., How do I clean the food bowls?)"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -93,6 +96,7 @@ if prompt := st.chat_input("e.g., How do I clean the food bowls? What do I do wh
 
         if not api_key:
             st.error("No API key configured. Please ask the owner to add it to app secrets.")
+            st.info("💡 If you are helping, the owner needs to add OPENROUTER_API_KEY to the app's secrets.")
         else:
             for _ in range(len(FREE_MODELS)):
                 model = FREE_MODELS[st.session_state.model_idx]
