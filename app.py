@@ -6,8 +6,8 @@ from pathlib import Path
 
 st.set_page_config(page_title="🐾 Instructions For Birdies", page_icon="🐾")
 
-st.title("🐾 Instructions For Birdies")
-st.caption("Ask anything about instructions and it will tell you.")
+st.title("🐥 Instructions For Birdies")
+st.caption("A virtual Matt and Lee Anne assistant for anything unsure on for the birdies.")
 
 # ------------------------------------------------------------------
 # FREE MODELS (OpenRouter) - cycled automatically if one is busy
@@ -52,7 +52,7 @@ You are a helpful assistant for a pet sitter looking after the owners' 2 budgies
 Answer using ONLY the instructions below. If the answer is not there, say you
 don't know and suggest contacting the owners. Keep answers clear and practical,
 and always stress anything marked as very important (e.g. no soap residue,
-washing the pestle, keeping the cage closed).
+washing the pestle, keeping the cage closed). Be very concise when answering. Try and summarize when answering, not a long winded answer so it is quicker to read. Always stay on the side of safety for the budgies and that the owners adore these 2 budgies and they are their life.
 
 --- INSTRUCTIONS ---
 {instructions_text}
