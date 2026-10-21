@@ -4,7 +4,7 @@ import os
 import time
 from pathlib import Path
 
-st.set_page_config(page_title="🐾 Instructions For Birdies", page_icon="🐾")
+st.set_page_config(page_title="🐥 Instructions For Birdies", page_icon="🐾")
 
 st.title("🐥 Instructions For Birdies")
 st.caption("A virtual Matt and Lee Anne assistant for anything unsure on for the birdies.")
